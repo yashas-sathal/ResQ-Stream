@@ -1,6 +1,6 @@
 # ResQ-Stream: Real-Time Predictive Supply Chain and Inventory Routing for Critical Medical Shortages
 
-IBM Z Datathon 2026 | Event code: **SSF2026** | Team: **[TEAM NAME]**
+IBM Z Datathon 2026 | Event code: **SSF2026** | Team: **HexaByte**
 
 Hospitals learn about shortages after they happen, and streaming patient and logistics data to third-party clouds creates compliance risk. ResQ-Stream predicts stockouts hours ahead and recommends inventory transfers **before** a stockout, with all processing on IBM LinuxONE (s390x).
 
