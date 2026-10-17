@@ -7,4 +7,4 @@ torch          # preinstalled on the LinuxONE VM; or install onnxruntime instead
 onnxruntime    # fallback if torch is not available
 xgboost        # optional; the code falls back to scikit-learn boosting without it
 jupyter
-EOF
+
