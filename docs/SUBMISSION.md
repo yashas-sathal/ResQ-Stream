@@ -5,7 +5,7 @@
 **Project description (paste, include the event code):**
 > SSF2026. ResQ-Stream predicts hospital supply stockouts hours ahead with a temporal graph neural network and recommends inventory transfers with a min-cost-flow optimizer, all running on IBM LinuxONE (s390x) so sensitive logistics data stays on enterprise infrastructure. On a 30-day simulated test, it reduced stockout episodes by 79% and unmet demand by 87% versus no rerouting. Theme: Real-time AI for critical decisions.
 
-**Upload:** video (<= 3:00) | GitHub link https://github.com/sujaypatil918j-max/resq-stream | optional: flowchart (README), screenshots
+**Upload:** video (<= 3:00) | GitHub link https://github.com/yashas-sathal/ResQ-Stream | optional: flowchart (README), screenshots
 
 **Before you press submit**
 - [ ] Both IBM labs completed (mandatory)

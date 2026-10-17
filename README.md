@@ -28,7 +28,7 @@ Prediction (stockout within 6h): temporal GNN F1 0.69, PR-AUC 0.77; gradient boo
 
 ## Run it (on the LinuxONE VM)
 ```bash
-git clone https://github.com/sujaypatil918j-max/resq-stream.git && cd resq-stream
+git clone https://github.com/yashas-sathal/ResQ-Stream.git && cd ResQ-Stream
 jupyter notebook   # open notebooks/ResQ_Stream_Action_Stage.ipynb, Run All
 python dashboard/build_dashboard.py   # writes dashboard/resq_dashboard.html
 ```
