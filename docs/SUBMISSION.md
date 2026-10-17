@@ -1,6 +1,6 @@
 # Submission (Hack2skill: https://hack2skill.com/event/datathon-2026)
 
-**Project title:** `[TEAM NAME]_IBM Z Datathon 2026 Project`  (title MUST include the team name)
+**Project title:** `HexaByte_IBM Z Datathon 2026 Project`  (title MUST include the team name)
 
 **Project description (paste, include the event code):**
 > SSF2026. ResQ-Stream predicts hospital supply stockouts hours ahead with a temporal graph neural network and recommends inventory transfers with a min-cost-flow optimizer, all running on IBM LinuxONE (s390x) so sensitive logistics data stays on enterprise infrastructure. On a 30-day simulated test, it reduced stockout episodes by 79% and unmet demand by 87% versus no rerouting. Theme: Real-time AI for critical decisions.
