@@ -48,5 +48,5 @@ python dashboard/build_dashboard.py   # writes dashboard/resq_dashboard.html
 ## Honest limitations
 Data is **simulated**. Lane capacities are assumed (400 units). Donors' own reorder rules are not re-run in the replay. The planner does not know which lane a route closure hit. Telum acceleration, Kafka streaming, confidential computing and federated learning are **future work**, not demonstrated here.
 
-## Open-source libraries
-PyTorch, NumPy, pandas, scikit-learn, NetworkX, matplotlib, XGBoost (where available), ONNX / ONNX Runtime.
+   ## Open-source libraries
+   [PyTorch](https://pytorch.org), [NumPy](https://numpy.org), [pandas](https://pandas.pydata.org), [scikit-learn](https://scikit-learn.org), [NetworkX](https://networkx.org), [matplotlib](https://matplotlib.org), [XGBoost](https://xgboost.readthedocs.io), [ONNX](https://onnx.ai) and [ONNX Runtime](https://onnxruntime.ai)
