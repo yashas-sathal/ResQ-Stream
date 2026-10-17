@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    "DIST-Central",
+    "DIST-East",
+    "HOSP-01",
+    "HOSP-02",
+    "HOSP-03",
+    "HOSP-04",
+    "HOSP-05",
+    "HOSP-06",
+    "WH-North",
+    "WH-South"
+  ],
+  "items": [
+    "epinephrine_1mg",
+    "iv_saline_1l",
+    "n95_mask",
+    "oxygen_cylinder_d"
+  ],
+  "window": 12,
+  "N": 6,
+  "hidden": 48,
+  "in_f": 30,
+  "threshold": 0.8616402747075097,
+  "feature_layout": "per node: 4 items x 6 [log_stock/10, log_rate/5, log_hours_left, eta/72, has_inbound, cover_gap/72] (items sorted) + 3 event flags + is_warehouse + hod_sin + hod_cos"
+}

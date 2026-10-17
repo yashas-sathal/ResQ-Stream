@@ -1,0 +1,37 @@
+{
+  "precision":{
+    "Exp. smoothing":0.591,
+    "XGBoost":0.896,
+    "Temporal GNN":0.668
+  },
+  "recall":{
+    "Exp. smoothing":0.768,
+    "XGBoost":0.884,
+    "Temporal GNN":0.71
+  },
+  "f1":{
+    "Exp. smoothing":0.668,
+    "XGBoost":0.89,
+    "Temporal GNN":0.689
+  },
+  "pr_auc":{
+    "Exp. smoothing":0.681,
+    "XGBoost":0.94,
+    "Temporal GNN":0.769
+  },
+  "detection_rate":{
+    "Exp. smoothing":1.0,
+    "XGBoost":1.0,
+    "Temporal GNN":0.897
+  },
+  "mean_lead_hrs":{
+    "Exp. smoothing":4.609,
+    "XGBoost":5.424,
+    "Temporal GNN":5.139
+  },
+  "events":{
+    "Exp. smoothing":184,
+    "XGBoost":184,
+    "Temporal GNN":184
+  }
+}

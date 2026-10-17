@@ -1,0 +1,4 @@
+model,precision,recall,f1,pr_auc,detection_rate,mean_lead_hrs,events
+Exp. smoothing,0.591,0.768,0.668,0.681,1.0,4.609,184
+XGBoost,0.896,0.884,0.89,0.94,1.0,5.424,184
+Temporal GNN,0.668,0.71,0.689,0.769,0.897,5.139,184
