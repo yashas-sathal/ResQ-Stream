@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ResQ-Stream dispatch board</title>
+<style>
+:root{--bg:#edf1f4;--sheet:#fff;--ink:#0e2a3f;--mut:#5c7183;--line:#d5dde4;--crit:#c0392b;--ok:#1f7a6e;--warn:#c98a12;--calm:#7fa3bf;--acc:#1f4e8c;--track:#e4eaef}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1620;--sheet:#11202d;--ink:#e6edf3;--mut:#8ea3b5;--line:#243746;--crit:#e5584a;--ok:#3fb5a3;--warn:#e0a63a;--calm:#5f86a6;--acc:#6ea0e0;--track:#1a2d3c}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans","Segoe UI",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.sheet{max-width:1120px;margin:20px auto;background:var(--sheet);border:1px solid var(--line);border-radius:6px}
+header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+h1{font-size:22px;font-weight:600;margin:0;letter-spacing:-.01em}h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.sub{color:var(--mut);font-size:13px;max-width:60ch;margin-top:2px}.run{color:var(--mut);font-size:12px;text-align:right;line-height:1.6}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.kpi{padding:16px 24px;border-right:1px solid var(--line)}.kpi:last-child{border:0}
+.kpi .n{font-size:26px;font-weight:600;letter-spacing:-.02em}.kpi .n i{font-style:normal;color:var(--mut);font-weight:400;margin:0 6px}
+.kpi .n b{color:var(--ok)}.kpi .d{font-size:12px;color:var(--mut)}
+section{padding:18px 24px;border-bottom:1px solid var(--line)}section:last-of-type{border:0}
+.note{color:var(--mut);font-size:12.5px;margin:0 0 12px;max-width:80ch}
+.ctl{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+button{font:inherit;font-weight:500;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:6px 16px;cursor:pointer;min-width:84px}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+input[type=range]{flex:1;accent-color:var(--acc)}#hr{min-width:150px;text-align:right;font-weight:600}
+canvas{width:100%;display:block;cursor:ew-resize;touch-action:none}
+.key{display:flex;gap:18px;font-size:12px;color:var(--mut);margin-top:8px;flex-wrap:wrap}.key s{display:inline-block;width:12px;height:8px;margin-right:6px;text-decoration:none;border-radius:1px}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:0}.two>section{border-bottom:0}.two>section+section{border-left:1px solid var(--line)}
+@media(max-width:860px){.kpis,.two{grid-template-columns:1fr}.kpi{border-right:0;border-bottom:1px solid var(--line)}.two>section+section{border-left:0;border-top:1px solid var(--line)}.run{text-align:left}}
+table{border-collapse:collapse;width:100%}th{font-weight:500;color:var(--mut);font-size:12px;text-align:left;padding:4px 8px 8px 0}
+td{padding:6px 8px 6px 0;vertical-align:middle;border-top:1px solid var(--line)}td.h{font-weight:600;padding-right:12px;white-space:nowrap}
+.cell{position:relative;height:30px;background:var(--track);border-radius:3px;overflow:hidden}
+.fill{position:absolute;inset:0 auto 0 0}.cell span{position:relative;display:block;font-size:12px;font-weight:600;line-height:30px;padding:0 8px}
+.cell.out{background:var(--crit);color:#fff}.cell.saved{box-shadow:inset 0 0 0 2px var(--ok)}.cell small{float:right;font-weight:500;font-size:11px;line-height:30px;padding-right:6px;color:var(--ok)}
+.cell.out small{color:#fff}
+.log div{padding:8px 0;border-top:1px solid var(--line);font-size:13px}.log div:first-child{border:0;padding-top:0}
+.log em{font-style:normal;color:var(--mut);font-size:12px;display:block}.log b{font-weight:600}.empty{color:var(--mut)}
+footer{padding:12px 24px;color:var(--mut);font-size:12px;border-top:1px solid var(--line)}
+</style></head><body><div class="sheet">
+<header><div><h1>ResQ-Stream dispatch board</h1><div class="sub">Predicts which hospitals will run out of critical supplies in the next 6 hours and recommends where to move stock from. Replay of 30 simulated days.</div></div><div class="run" id="run"></div></header>
+<div class="kpis" id="kpis"></div>
+<section><h2>Stockouts by hospital over time</h2>
+<p class="note">Each hospital has two lanes. The upper lane is what happened with no rerouting; the lower lane is the same month with ResQ-Stream acting. Darker means more of the four supplies were out at once.</p>
+<div class="ctl"><button id="play" aria-label="Play or pause the replay">Play</button><input type="range" id="sl" min="0" value="0" aria-label="Replay hour"><span id="hr"></span></div>
+<canvas id="cv" height="300" tabindex="0" role="img" aria-label="Stockout timeline for each hospital, with and without rerouting"></canvas>
+<div class="key"><span><s style="background:var(--crit);opacity:.25"></s>1 supply out</span><span><s style="background:var(--crit)"></s>all 4 out</span><span>Click or drag the timeline to jump to an hour</span></div></section>
+<div class="two"><section><h2>Stock risk right now</h2>
+<p class="note">Bar length is the chance of a stockout within 6 hours. Red means the hospital is out of stock despite ResQ-Stream. A green outline means it would have been out without rerouting.</p><table id="grid"></table></section>
+<section><h2>Recommended transfers</h2><p class="note">Most recent first. Each lane is only used if the stock arrives before the hospital runs out.</p><div class="log" id="tr"></div></section></div>
+<footer>Simulated hospital data the model was not trained on. Lane capacities are assumed. Results are from a replay, not a live deployment.</footer></div>
+<script>
+const D=__DATA__,N=D.hours.length,nI=D.items.length,nH=D.hosp.length;
+const nm={epinephrine_1mg:"Epinephrine",iv_saline_1l:"IV saline",n95_mask:"N95 masks",oxygen_cylinder_d:"Oxygen"};
+const $=i=>document.getElementById(i),css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+$("run").innerHTML=`Risk scores from ${D.backend}<br>Planner time ${D.ms} ms per decision<br>Alert threshold ${Math.round(D.thr*100)}%`;
+$("kpis").innerHTML=Object.entries(D.kpi).map(([k,[a,b]])=>`<div class="kpi"><div class="d">${k}</div><div class="n">${a}<i>to</i>${b}</div><div class="d"><b>${a?Math.round(100*(a-b)/a):0}% fewer</b> with ResQ-Stream</div></div>`).join("");
+// per-hospital count of items out, per hour
+const cnt=(S)=>D.hosp.map((_,r)=>S.map(s=>{let c=0;for(let i=0;i<nI;i++)if(s[r*nI+i]=="1")c++;return c}));
+const CB=cnt(D.base),CA=cnt(D.act);$("sl").max=N-1;
+const cv=$("cv"),LBL=70,ROW=300/nH;let W=0,t=0;
+function lane(x,y,h,arr,col){const w=(W-LBL)/N;for(let i=0;i<N;i++){if(arr[i]){x.globalAlpha=.25+.75*arr[i]/nI;x.fillStyle=col;x.fillRect(LBL+i*w,y,Math.max(w,1),h)}}x.globalAlpha=1}
+function chart(){const dpr=window.devicePixelRatio||1;W=cv.clientWidth;cv.width=W*dpr;cv.height=300*dpr;const x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,300);
+ const crit=css("--crit"),mut=css("--mut"),track=css("--track"),ink=css("--ink");x.font="12px system-ui,sans-serif";x.textBaseline="middle";
+ D.hosp.forEach((n,r)=>{const y=r*ROW+4,h=(ROW-8)/2-1;x.fillStyle=track;x.fillRect(LBL,y,W-LBL,h);x.fillRect(LBL,y+h+2,W-LBL,h);
+  lane(x,y,h,CB[r],crit);lane(x,y+h+2,h,CA[r],crit);x.fillStyle=ink;x.fillText(n,0,y+h+1)});
+ const px=LBL+t/(N-1)*(W-LBL);x.fillStyle=ink;x.fillRect(px-1,0,2,300)}
+function board(){$("hr").textContent="Hour "+D.hours[t]+" of "+D.hours[N-1];
+ let h=`<tr><th>Hospital</th>${D.items.map(i=>`<th>${nm[i]||i}</th>`).join("")}</tr>`;
+ D.hosp.forEach((n,r)=>{h+=`<tr><td class="h">${n}</td>`;D.items.forEach((_,c)=>{const k=r*nI+c,p=D.risk[t][k],o=D.act[t][k]=="1",b=D.base[t][k]=="1",sv=b&&!o;
+  const col=p>=.8?"var(--crit)":p>=D.thr?"var(--warn)":"var(--calm)";
+  h+=`<td><div class="cell${o?" out":""}${sv?" saved":""}"><div class="fill" style="width:${o?0:Math.max(2,p*100)}%;background:${col};opacity:.85"></div><span>${o?"Out":Math.round(p*100)+"%"}${sv?"<small>Covered</small>":""}</span></div></td>`});h+="</tr>"});
+ $("grid").innerHTML=h;
+ const rows=D.plans.filter(p=>p[0]<=D.hours[t]).slice(-7).reverse();
+ $("tr").innerHTML=rows.length?rows.map(p=>`<div><b>${p[4]} ${nm[p[1]]||p[1]}</b> from ${p[2]} to ${p[3]}<em>Hour ${p[0]}, arrives in ${p[5]} h, risk ${Math.round(p[6]*100)}%</em></div>`).join(""):`<div class="empty">No transfers recommended yet. Press Play or drag the timeline.</div>`}
+const draw=()=>{chart();board()};
+$("sl").oninput=e=>{t=+e.target.value;draw()};
+let timer=null;$("play").onclick=()=>{if(timer){clearInterval(timer);timer=null;$("play").textContent="Play";return}
+ $("play").textContent="Pause";timer=setInterval(()=>{t=t+1>=N?0:t+1;$("sl").value=t;draw()},90)};
+const seek=e=>{const r=cv.getBoundingClientRect();t=Math.max(0,Math.min(N-1,Math.round((e.clientX-r.left-LBL)/(r.width-LBL)*(N-1))));$("sl").value=t;draw()};
+let drag=false;cv.onpointerdown=e=>{drag=true;cv.setPointerCapture(e.pointerId);seek(e)};cv.onpointermove=e=>{if(drag)seek(e)};cv.onpointerup=()=>drag=false;
+cv.onkeydown=e=>{if(e.key=="ArrowRight"||e.key=="ArrowLeft"){t=Math.max(0,Math.min(N-1,t+(e.key=="ArrowRight"?6:-6)));$("sl").value=t;draw()}};
+addEventListener("resize",draw);matchMedia("(prefers-color-scheme:dark)").onchange=draw;
+t=D.hours.findIndex(h=>h>=D.plans[0]?.[0]+4);t=Math.max(0,t);$("sl").value=t;draw();
+</script></body></html>

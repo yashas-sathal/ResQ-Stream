@@ -33,7 +33,7 @@ class TemporalGNN(nn.Module):
 
 def load_model(art_dir=ART_DIR):
     meta = json.load(open(art_dir / "meta.json"))
-    A = np.load(art_dir / "adj.npy")
+    A = np.load(art_dir / "adj.npy").astype(np.float32)  # native byte order for big-endian s390x
     m = TemporalGNN(A, meta["in_f"], len(meta["items"]), meta["hidden"])
     m.load_state_dict(torch.load(art_dir / "gnn.pt", map_location="cpu"))
     return m.eval(), meta
